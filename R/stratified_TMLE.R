@@ -25,7 +25,7 @@ collapse_strata <- function(data, nodes)
 }
 
 #' @export
-tmle_for_stratum <- function(strata_row, data, nodes, baseline_level, learner_list){
+tmle_for_stratum <- function(strata_row, data, nodes, learner_list){
   strata_row
   stratum_label <- strata_row$strata_label
   message("tmle for:\t",stratum_label)
@@ -44,15 +44,27 @@ tmle_for_stratum <- function(strata_row, data, nodes, baseline_level, learner_li
 
   max_covariates <- floor(strata_row$min_cell/10)
   stratum_nodes_reduced <- reduce_covariates(stratum_data, nodes, max_covariates)
+  tmle_spec_opttx <- tmle3_mopttx_vim(V = stratum_nodes_reduced$W,
+                              type = "blip2",
+                              b_learner = NULL,
+                              contrast = "multiplicative",
+                              maximize = FALSE)
 
-  tmle_spec <- tmle_risk(baseline_level=baseline_level)
 
 
   if(length(stratum_nodes_reduced$W)==0){
-    learner_list <- list(Y=make_learner(Lrnr_glm), A=make_learner(Lrnr_mean))
+    mn_metalearner <- make_learner(Lrnr_solnp, loss_function = loss_loglik_multinomial, learner_function = metalearner_linear_multinomial)   
+    qb_metalearner <- make_learner(Lrnr_solnp, loss_function = loss_loglik_binomial, learner_function = metalearner_logistic_binomial)
+    qlib <- make_learner_stack("Lrnr_glm", "Lrnr_mean")
+    glib <- make_learner_stack("Lrnr_mean")
+    Q_learner <- make_learner(Lrnr_sl, qlib, qb_metalearner)
+    g_learner <- make_learner(Lrnr_sl, glib, mn_metalearner)
+
+  
+    learner_list <- list(Y=Q_learner, A=g_learner)
   }
 
-  tmle_fit <- tmle3(tmle_spec, stratum_data, stratum_nodes_reduced, learner_list)
+  tmle_fit <- tmle3(tmle_spec_opttx, stratum_data, stratum_nodes_reduced, learner_list)
 
   results <- tmle_fit$summary
 
@@ -68,16 +80,24 @@ tmle_for_stratum <- function(strata_row, data, nodes, baseline_level, learner_li
 
   set(results, , names(node_data), node_data)
 
+  # get treatment assignments
+  rule_fun <- tmle_fit$tmle_params[[1]]$cf_likelihood$intervention_list$A$rule_fun
+  treatment_assignment <- rule_fun(tmle_fit$tmle_task)
+  treatment_dt <- as.data.table(as.list(table(treatment_assignment)))
+  setnames(treatment_dt, names(treatment_dt), sprintf("N_assigned_%s",names(treatment_dt)))
+  
+  results <- cbind(results, treatment_dt)
+
   return(results)
 }
 
 #' @export
 #' @importFrom data.table rbindlist
-stratified_tmle <- function(data, nodes, baseline_level, learner_list, strata){
+stratified_tmle <- function(data, nodes, learner_list, strata){
 
   strata_row <- strata[1,]
   results <- strata[,tmle_for_stratum(.SD, data, nodes,
-                                          baseline_level, learner_list),
+                                          learner_list),
                         by=seq_len(nrow(strata))]
 
 

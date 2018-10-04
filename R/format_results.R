@@ -23,6 +23,8 @@ get_obs_counts <- function(data, nodes, tl_params){
 #' @importFrom stringr str_match_all
 #' @importFrom data.table as.data.table
 get_intervention_levels <- function(param_names){
+  param_names <- gsub("E[Y]","E[Y={A=observed}]",param_names, fixed=TRUE)
+  param_names <- gsub("NULL","optimal",param_names, fixed=TRUE)
   matches <- str_extract_all(param_names, "A=([^\\}]*)",simplify="TRUE")
   matches <- gsub("A=","",matches)
   matches[matches==""]=NA
