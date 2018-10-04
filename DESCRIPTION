@@ -22,8 +22,7 @@ Remotes:
     github::tlverse/tmle3mopttx@vim-spec,
     github::tlverse/sl3@sl-edge-cases,
     github::tlverse/tmle3,
-    github::tlverse/longbowtools,
-    
+    github::tlverse/longbowtools
 Suggests: 
     testthat
 RoxygenNote: 6.1.0
