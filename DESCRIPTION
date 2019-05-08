@@ -13,7 +13,7 @@ Imports:
 	 ggplot2,
 	 stringr,
      tmle3mopttx,
-     sl3,
+     sl3@fix-nrow,
      tmle3,
      longbowtools
 Remotes:
