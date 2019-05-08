@@ -46,7 +46,7 @@ tmle_for_stratum <- function(strata_row, data, nodes, learner_list){
   stratum_nodes_reduced <- reduce_covariates(stratum_data, nodes, max_covariates)
   tmle_spec_opttx <- tmle3_mopttx_vim(V = stratum_nodes_reduced$W,
                               type = "blip2",
-                              learners = make_learner(Lrnr_cv,make_learner(Lrnr_mean)),
+                              learners = list(B=make_learner(Lrnr_cv,make_learner(Lrnr_mean))),
                               contrast = "multiplicative",
                               maximize = FALSE)
 
