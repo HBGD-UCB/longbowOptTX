@@ -13,14 +13,14 @@ Imports:
 	 ggplot2,
 	 stringr,
      tmle3mopttx,
-     sl3@fix-nrow,
+     sl3,
      tmle3,
      longbowtools
 Remotes:
     github::osofr/condensier,
     github::tlverse/delayed,
     github::tlverse/tmle3mopttx,
-    github::tlverse/sl3,
+    github::tlverse/sl3@fix-nrow,
     github::tlverse/tmle3,
     github::tlverse/longbowtools
 Suggests: 
