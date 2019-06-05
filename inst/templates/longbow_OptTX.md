@@ -40,7 +40,7 @@ params:
         input: 'character'
         value: "[1,2)"
   output_directory:
-    value: ''
+    value: '~/tmp/'
 editor_options: 
   chunk_output_type: console
 ---
@@ -219,11 +219,11 @@ todo: add detail about dropping strata with rare outcomes, handling missingness
 
  study_id  mrace   intervention_level   baseline_level     estimate    ci_lower    ci_upper
 ---------  ------  -------------------  ---------------  ----------  ----------  ----------
-        1  White   optimal              NA                0.6502829   0.5096840   0.7908818
-        2  White   optimal              NA                0.3806182   0.2816977   0.4795386
-        3  White   optimal              NA                0.5827493   0.4828383   0.6826602
-        4  White   optimal              NA                0.5213925   0.4104916   0.6322933
-        5  White   optimal              NA                0.6065027   0.4832848   0.7297207
+        1  White   optimal              NA                0.5982702   0.4562589   0.7402816
+        2  White   optimal              NA                0.3852170   0.2857261   0.4847079
+        3  White   optimal              NA                0.5931942   0.4894082   0.6969801
+        4  White   optimal              NA                0.4371479   0.3301585   0.5441374
+        5  White   optimal              NA                0.5803940   0.4742757   0.6865124
 
 
 ### Parameter: E(Y)
@@ -243,9 +243,9 @@ todo: add detail about dropping strata with rare outcomes, handling missingness
 
  study_id  mrace   intervention_level   baseline_level     estimate    ci_lower    ci_upper
 ---------  ------  -------------------  ---------------  ----------  ----------  ----------
-        1  White   optimal              observed          0.9885803   0.8178577   1.1949402
-        2  White   optimal              observed          0.7924346   0.6429950   0.9766056
-        3  White   optimal              observed          1.0381427   0.8986808   1.1992471
-        4  White   optimal              observed          1.0097390   0.8476088   1.2028813
-        5  White   optimal              observed          1.1405872   0.9646918   1.3485542
+        1  White   optimal              observed          0.9095091   0.7376658   1.1213842
+        2  White   optimal              observed          0.8020092   0.6514891   0.9873054
+        3  White   optimal              observed          1.0567498   0.9075347   1.2304987
+        4  White   optimal              observed          0.8465893   0.6925074   1.0349542
+        5  White   optimal              observed          1.0914873   0.9414661   1.2654141
 
