@@ -40,7 +40,7 @@ params:
         input: 'character'
         value: "[1,2)"
   output_directory:
-    value: ''
+    value: '~/tmp/'
 editor_options: 
   chunk_output_type: console
 ---
@@ -118,12 +118,16 @@ if(length(nodes$W)>0){
   metalearner <- make_learner(Lrnr_nnls)
   Q_learner <- make_learner(Lrnr_sl, qlib, qb_metalearner)
   g_learner <- make_learner(Lrnr_sl, glib, mn_metalearner)
+  B_learner <- create_mv_learners(qlib$params$learners)
 } else {
   Q_learner <- make_learner(Lrnr_glm)
   g_learner <- make_learner(Lrnr_mean)
+  B_learner <- make_learner(Lrnr_cv,
+                            make_learner(Lrnr_multivariate,make_learner(Lrnr_mean)),
+                            full_fit=TRUE)
 }
 
-learner_list <- list(Y=Q_learner, A=g_learner)
+learner_list <- list(Y=Q_learner, A=g_learner, B=B_learner)
 
 ```
 
@@ -228,9 +232,13 @@ todo: add detail about dropping strata with rare outcomes, handling missingness
 
 
 ```{r stratified_tmle, message=FALSE}
+options(sl3.pcontinuous = 0)
 # CF_Likelihood$undebug("enumerate_cf_tasks")
-# tmle3mopttx:::Optimal_Rule_Q_learning$debug("fit_blip")
+# tmle3mopttx:::Optimal_Rule_Revere$debug("fit_blip")
+# tmle3mopttx:::Optimal_Rule_Revere$debug("rule")
+# tmle_for_stratum(strata[1,],data,nodes,learner_list)
 results <- stratified_tmle(data, nodes, learner_list, strata)
+
 formatted_results <- format_results(results, data, nodes)
 ```
 

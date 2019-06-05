@@ -47,12 +47,12 @@ format_results <- function(results, data, nodes){
                  "type", "param",
                  "intervention", "baseline",
                  "psi_transformed", "lower_transformed", "upper_transformed",
-                 "tmle_est","se")
+                 "tmle_est","se","opttx_val","opttx_full")
   nice_names <- c(nodes$strata, "adjustment_set", "intervention_variable", "outcome_variable",
                 "type", "parameter",
                 "intervention_level","baseline_level",
                 "estimate","ci_lower","ci_upper",
-                "untransformed_estimate","untransformed_se")
+                "untransformed_estimate","untransformed_se","opttx_cv","opttx_full")
   formatted <- results[,keep_cols, with=FALSE]
   setnames(formatted, nice_names)
 

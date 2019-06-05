@@ -44,14 +44,7 @@ tmle_for_stratum <- function(strata_row, data, nodes, learner_list){
 
   max_covariates <- floor(strata_row$min_cell/10)
   stratum_nodes_reduced <- reduce_covariates(stratum_data, nodes, max_covariates)
-  tmle_spec_opttx <- tmle3_mopttx_vim(V = stratum_nodes_reduced$W,
-                              type = "blip2",
-                              learners = list(B=make_learner(Lrnr_cv,make_learner(Lrnr_multivariate,make_learner(Lrnr_mean)))),
-                              contrast = "multiplicative",
-                              maximize = FALSE)
-
-
-
+  
   if(length(stratum_nodes_reduced$W)==0){
     mn_metalearner <- make_learner(Lrnr_solnp, loss_function = loss_loglik_multinomial, learner_function = metalearner_linear_multinomial)   
     qb_metalearner <- make_learner(Lrnr_solnp, loss_function = loss_loglik_binomial, learner_function = metalearner_logistic_binomial)
@@ -59,10 +52,20 @@ tmle_for_stratum <- function(strata_row, data, nodes, learner_list){
     glib <- make_learner_stack("Lrnr_mean")
     Q_learner <- make_learner(Lrnr_sl, qlib, qb_metalearner)
     g_learner <- make_learner(Lrnr_sl, glib, mn_metalearner)
+    B_learner <- make_learner(Lrnr_cv,make_learner(Lrnr_multivariate,make_learner(Lrnr_mean)),full_fit=TRUE)
+    
+    learner_list <- list(Y=Q_learner, A=g_learner, B = B_learner)
+  }
+  
+  tmle_spec_opttx <- tmle3_mopttx_vim(V = stratum_nodes_reduced$W,
+                              type = "blip2",
+                              learners = learner_list,
+                              contrast = "multiplicative",
+                              maximize = FALSE)
+
+
 
   
-    learner_list <- list(Y=Q_learner, A=g_learner)
-  }
 
   tmle_fit <- tmle3(tmle_spec_opttx, stratum_data, stratum_nodes_reduced, learner_list)
 
@@ -81,12 +84,18 @@ tmle_for_stratum <- function(strata_row, data, nodes, learner_list){
   set(results, , names(node_data), node_data)
 
   # get treatment assignments
-  rule_fun <- tmle_fit$tmle_params[[1]]$cf_likelihood$intervention_list$A$rule_fun
-  treatment_assignment <- rule_fun(tmle_fit$tmle_task)
-  treatment_dt <- as.data.table(as.list(table(treatment_assignment)))
-  setnames(treatment_dt, names(treatment_dt), sprintf("N_assigned_%s",names(treatment_dt)))
+  rule_fun <- tmle_spec_opttx$return_opt$rule
   
-  results <- cbind(results, treatment_dt)
+  rule_count = function(opttx){
+    treatment_dt <- as.data.table(as.list(table(opttx)))
+    paste(sprintf("n_%s:%s",names(treatment_dt),unlist(treatment_dt)),collapse=" ")
+  }
+  
+  opttx_val <- rule_fun(tmle_fit$tmle_task,"validation")
+  results$opttx_val = rule_count(opttx_val)
+  
+  opttx_full <- rule_fun(tmle_fit$tmle_task,"full")
+  results$opttx_full = rule_count(opttx_full)
 
   return(results)
 }
