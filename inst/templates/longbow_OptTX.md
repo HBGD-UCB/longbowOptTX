@@ -22,7 +22,7 @@ params:
     value:
       strata: ['study_id', 'mrace']
       id: ['subjid']
-      W: ['apgar1', 'apgar5', 'gagebrth', 'mage', 'meducyrs', 'sexn']
+      W: []
       A: ['parity_cat']
       Y: ['haz01']
   script_params:
@@ -62,15 +62,7 @@ editor_options:
 
 **Adjustment Set:**
 
-* gagebrth
-* mage
-* sexn
-* apgar1
-* apgar5
-* meducyrs
-* delta_apgar1
-* delta_apgar5
-* delta_meducyrs
+unadjusted
 
 ## Stratifying Variables
 
@@ -200,6 +192,28 @@ todo: add detail about dropping strata with rare outcomes, handling missingness
 
 
 
+```
+##    study_id mrace              strata_label type                  param
+## 1:        1 White study_id: 1, mrace: White  TSM          E[Y_{A=NULL}]
+## 2:        1 White study_id: 1, mrace: White E(Y)                   E[Y]
+## 3:        1 White study_id: 1, mrace: White   RR RR(E[Y_{A=NULL}]/E[Y])
+##       init_est   tmle_est         se      lower     upper psi_transformed
+## 1:  0.61987303 0.69209101 0.06524229  0.5642185 0.8199635       0.6920910
+## 2:  0.66107473 0.65779468 0.03150976  0.5960367 0.7195527       0.6577947
+## 3: -0.06435223 0.05082462 0.08481729 -0.1154142 0.2170635       1.0521383
+##    lower_transformed upper_transformed NA          A     Y          W
+## 1:         0.5642185         0.8199635    parity_cat haz01 unadjusted
+## 2:         0.5960367         0.7195527    parity_cat haz01 unadjusted
+## 3:         0.8909970         1.2424229    parity_cat haz01 unadjusted
+##                                      opttx_val
+## 1: n_[0,1):0 n_[1,2):48 n_[2,3):215 n_[3,13]:0
+## 2: n_[0,1):0 n_[1,2):48 n_[2,3):215 n_[3,13]:0
+## 3: n_[0,1):0 n_[1,2):48 n_[2,3):215 n_[3,13]:0
+##                                    opttx_full
+## 1: n_[0,1):0 n_[1,2):0 n_[2,3):263 n_[3,13]:0
+## 2: n_[0,1):0 n_[1,2):0 n_[2,3):263 n_[3,13]:0
+## 3: n_[0,1):0 n_[1,2):0 n_[2,3):263 n_[3,13]:0
+```
 
 
 
@@ -219,11 +233,11 @@ todo: add detail about dropping strata with rare outcomes, handling missingness
 
  study_id  mrace   intervention_level   baseline_level     estimate    ci_lower    ci_upper
 ---------  ------  -------------------  ---------------  ----------  ----------  ----------
-        1  White   optimal              NA                0.5982702   0.4562589   0.7402816
-        2  White   optimal              NA                0.3852170   0.2857261   0.4847079
-        3  White   optimal              NA                0.5931942   0.4894082   0.6969801
-        4  White   optimal              NA                0.4371479   0.3301585   0.5441374
-        5  White   optimal              NA                0.5803940   0.4742757   0.6865124
+        1  White   optimal              NA                0.6572269   0.5192708   0.7951830
+        2  White   optimal              NA                0.4368813   0.3236281   0.5501345
+        3  White   optimal              NA                0.6867111   0.5860752   0.7873470
+        4  White   optimal              NA                0.4275082   0.3198998   0.5351165
+        5  White   optimal              NA                0.4947028   0.3908016   0.5986040
 
 
 ### Parameter: E(Y)
@@ -241,11 +255,11 @@ todo: add detail about dropping strata with rare outcomes, handling missingness
 ### Parameter: RR
 
 
- study_id  mrace   intervention_level   baseline_level     estimate    ci_lower    ci_upper
----------  ------  -------------------  ---------------  ----------  ----------  ----------
-        1  White   optimal              observed          0.9095091   0.7376658   1.1213842
-        2  White   optimal              observed          0.8020092   0.6514891   0.9873054
-        3  White   optimal              observed          1.0567498   0.9075347   1.2304987
-        4  White   optimal              observed          0.8465893   0.6925074   1.0349542
-        5  White   optimal              observed          1.0914873   0.9414661   1.2654141
+ study_id  mrace   intervention_level   baseline_level     estimate    ci_lower   ci_upper
+---------  ------  -------------------  ---------------  ----------  ----------  ---------
+        1  White   optimal              observed          0.9991368   0.8303729   1.202200
+        2  White   optimal              observed          0.9095725   0.7333844   1.128088
+        3  White   optimal              observed          1.2233463   1.0685739   1.400536
+        4  White   optimal              observed          0.8279208   0.6732694   1.018096
+        5  White   optimal              observed          0.9303366   0.7896886   1.096035
 

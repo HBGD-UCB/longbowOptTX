@@ -22,7 +22,7 @@ params:
     value:
       strata: ['study_id', 'mrace']
       id: ['subjid']
-      W: ['apgar1', 'apgar5', 'gagebrth', 'mage', 'meducyrs', 'sexn']
+      W: []
       A: ['parity_cat']
       Y: ['haz01']
   script_params:
@@ -39,6 +39,9 @@ params:
       baseline_level:
         input: 'character'
         value: "[1,2)"
+      maximize:
+        input: checkbox
+        value: TRUE
   output_directory:
     value: '~/tmp/'
 editor_options: 
@@ -236,8 +239,8 @@ options(sl3.pcontinuous = 0)
 # CF_Likelihood$undebug("enumerate_cf_tasks")
 # tmle3mopttx:::Optimal_Rule_Revere$debug("fit_blip")
 # tmle3mopttx:::Optimal_Rule_Revere$debug("rule")
-# tmle_for_stratum(strata[1,],data,nodes,learner_list)
-results <- stratified_tmle(data, nodes, learner_list, strata)
+# tmle_for_stratum(strata[1,],data,nodes,learner_list, tl_params$maximize)
+results <- stratified_tmle(data, nodes, learner_list, strata, tl_params$maximize)
 
 formatted_results <- format_results(results, data, nodes)
 ```

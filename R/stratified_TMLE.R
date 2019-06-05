@@ -25,7 +25,7 @@ collapse_strata <- function(data, nodes)
 }
 
 #' @export
-tmle_for_stratum <- function(strata_row, data, nodes, learner_list){
+tmle_for_stratum <- function(strata_row, data, nodes, learner_list, maximize){
   strata_row
   stratum_label <- strata_row$strata_label
   message("tmle for:\t",stratum_label)
@@ -57,11 +57,11 @@ tmle_for_stratum <- function(strata_row, data, nodes, learner_list){
     learner_list <- list(Y=Q_learner, A=g_learner, B = B_learner)
   }
   
-  tmle_spec_opttx <- tmle3_mopttx_vim(V = stratum_nodes_reduced$W,
+  tmle_spec_opttx <- tmle_opttx_risk(V = stratum_nodes_reduced$W,
                               type = "blip2",
                               learners = learner_list,
                               contrast = "multiplicative",
-                              maximize = FALSE)
+                              maximize = maximize)
 
 
 
@@ -102,11 +102,11 @@ tmle_for_stratum <- function(strata_row, data, nodes, learner_list){
 
 #' @export
 #' @importFrom data.table rbindlist
-stratified_tmle <- function(data, nodes, learner_list, strata){
+stratified_tmle <- function(data, nodes, learner_list, strata, maximize){
 
   strata_row <- strata[1,]
   results <- strata[,tmle_for_stratum(.SD, data, nodes,
-                                          learner_list),
+                                          learner_list, maximize),
                         by=seq_len(nrow(strata))]
 
 
