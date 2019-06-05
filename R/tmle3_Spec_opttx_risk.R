@@ -13,8 +13,8 @@ tmle3_Spec_opttx_risk <- R6Class(
   class = TRUE,
   inherit = tmle3_Spec_mopttx_blip_revere,
   public = list(
-    initialize = function(baseline_level = NULL, ...) {
-      super$initialize(baseline_level = baseline_level, ...)
+    initialize = function(...) {
+      super$initialize(...)
     },
     make_tmle_task = function(data, node_list, ...) {
       # bound Y if continuous

@@ -39,6 +39,9 @@ params:
       baseline_level:
         input: 'character'
         value: "[1,2)"
+      maximize:
+        input: checkbox
+        value: TRUE
   output_directory:
     value: '~/tmp/'
 editor_options: 
@@ -192,28 +195,6 @@ todo: add detail about dropping strata with rare outcomes, handling missingness
 
 
 
-```
-##    study_id mrace              strata_label type                  param
-## 1:        1 White study_id: 1, mrace: White  TSM          E[Y_{A=NULL}]
-## 2:        1 White study_id: 1, mrace: White E(Y)                   E[Y]
-## 3:        1 White study_id: 1, mrace: White   RR RR(E[Y_{A=NULL}]/E[Y])
-##       init_est   tmle_est         se      lower     upper psi_transformed
-## 1:  0.61987303 0.69209101 0.06524229  0.5642185 0.8199635       0.6920910
-## 2:  0.66107473 0.65779468 0.03150976  0.5960367 0.7195527       0.6577947
-## 3: -0.06435223 0.05082462 0.08481729 -0.1154142 0.2170635       1.0521383
-##    lower_transformed upper_transformed NA          A     Y          W
-## 1:         0.5642185         0.8199635    parity_cat haz01 unadjusted
-## 2:         0.5960367         0.7195527    parity_cat haz01 unadjusted
-## 3:         0.8909970         1.2424229    parity_cat haz01 unadjusted
-##                                      opttx_val
-## 1: n_[0,1):0 n_[1,2):48 n_[2,3):215 n_[3,13]:0
-## 2: n_[0,1):0 n_[1,2):48 n_[2,3):215 n_[3,13]:0
-## 3: n_[0,1):0 n_[1,2):48 n_[2,3):215 n_[3,13]:0
-##                                    opttx_full
-## 1: n_[0,1):0 n_[1,2):0 n_[2,3):263 n_[3,13]:0
-## 2: n_[0,1):0 n_[1,2):0 n_[2,3):263 n_[3,13]:0
-## 3: n_[0,1):0 n_[1,2):0 n_[2,3):263 n_[3,13]:0
-```
 
 
 
@@ -233,11 +214,11 @@ todo: add detail about dropping strata with rare outcomes, handling missingness
 
  study_id  mrace   intervention_level   baseline_level     estimate    ci_lower    ci_upper
 ---------  ------  -------------------  ---------------  ----------  ----------  ----------
-        1  White   optimal              NA                0.6572269   0.5192708   0.7951830
-        2  White   optimal              NA                0.4368813   0.3236281   0.5501345
-        3  White   optimal              NA                0.6867111   0.5860752   0.7873470
-        4  White   optimal              NA                0.4275082   0.3198998   0.5351165
-        5  White   optimal              NA                0.4947028   0.3908016   0.5986040
+        1  White   optimal              NA                0.8558355   0.7463714   0.9652996
+        2  White   optimal              NA                0.6679847   0.4933976   0.8425717
+        3  White   optimal              NA                0.6905730   0.5426692   0.8384768
+        4  White   optimal              NA                0.6019396   0.4338274   0.7700518
+        5  White   optimal              NA                0.4249466   0.2711595   0.5787337
 
 
 ### Parameter: E(Y)
@@ -255,11 +236,35 @@ todo: add detail about dropping strata with rare outcomes, handling missingness
 ### Parameter: RR
 
 
- study_id  mrace   intervention_level   baseline_level     estimate    ci_lower   ci_upper
----------  ------  -------------------  ---------------  ----------  ----------  ---------
-        1  White   optimal              observed          0.9991368   0.8303729   1.202200
-        2  White   optimal              observed          0.9095725   0.7333844   1.128088
-        3  White   optimal              observed          1.2233463   1.0685739   1.400536
-        4  White   optimal              observed          0.8279208   0.6732694   1.018096
-        5  White   optimal              observed          0.9303366   0.7896886   1.096035
+ study_id  mrace   intervention_level   baseline_level     estimate    ci_lower    ci_upper
+---------  ------  -------------------  ---------------  ----------  ----------  ----------
+        1  White   observed             optimal           0.7685994   0.6736738   0.8769008
+        2  White   observed             optimal           0.7190509   0.5673308   0.9113451
+        3  White   observed             optimal           0.8128587   0.6695315   0.9868682
+        4  White   observed             optimal           0.8578330   0.6681296   1.1013992
+        5  White   observed             optimal           1.2513243   0.9018313   1.7362588
+
+
+### Parameter: PAR
+
+
+ study_id  mrace   intervention_level   baseline_level      estimate     ci_lower     ci_upper
+---------  ------  -------------------  ---------------  -----------  -----------  -----------
+        1  White   optimal              NA                -0.1980408   -0.3048461   -0.0912355
+        2  White   optimal              NA                -0.1876697   -0.3455831   -0.0297563
+        3  White   optimal              NA                -0.1292347   -0.2625493    0.0040799
+        4  White   optimal              NA                -0.0855760   -0.2364433    0.0652914
+        5  White   optimal              NA                 0.1067994   -0.0316285    0.2452274
+
+
+### Parameter: PAF
+
+
+ study_id  mrace   intervention_level   baseline_level      estimate     ci_lower     ci_upper
+---------  ------  -------------------  ---------------  -----------  -----------  -----------
+        1  White   optimal              NA                -0.3010678   -0.4843979   -0.1403799
+        2  White   optimal              NA                -0.3907222   -0.7626400   -0.0972792
+        3  White   optimal              NA                -0.2302261   -0.4935818   -0.0133066
+        4  White   optimal              NA                -0.1657281   -0.4967157    0.0920640
+        5  White   optimal              NA                 0.2008467   -0.1088548    0.4240490
 
