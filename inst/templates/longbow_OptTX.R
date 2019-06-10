@@ -2,12 +2,12 @@ params <-
 list(roles = c("exclude", "strata", "id", "W", "A", "Y"), data = list(
     type = "web", uri = "https://raw.githubusercontent.com/HBGD-UCB/longbowRiskFactors/master/inst/sample_data/birthwt_data.rdata"), 
     nodes = list(strata = c("study_id", "mrace"), id = "subjid", 
-        W = c("apgar1", "apgar5", "gagebrth", "mage", "meducyrs", 
-        "sexn"), A = "parity_cat", Y = "haz01"), script_params = list(
+        W = list(), A = "parity_cat", Y = "haz"), script_params = list(
         parallelize = list(input = "checkbox", value = FALSE), 
         count_A = list(input = "checkbox", value = TRUE), count_Y = list(
-            input = "checkbox", value = TRUE), baseline_level = list(
-            input = "character", value = "[1,2)")), output_directory = "")
+            input = "checkbox", value = FALSE), baseline_level = list(
+            input = "character", value = "[1,2)"), maximize = list(
+            input = "checkbox", value = TRUE)), output_directory = "~/tmp/")
 
 ## ----setup, include=FALSE------------------------------------------------
 library(knitr)
@@ -82,12 +82,16 @@ if(length(nodes$W)>0){
   metalearner <- make_learner(Lrnr_nnls)
   Q_learner <- make_learner(Lrnr_sl, qlib, qb_metalearner)
   g_learner <- make_learner(Lrnr_sl, glib, mn_metalearner)
+  B_learner <- create_mv_learners(qlib$params$learners)
 } else {
   Q_learner <- make_learner(Lrnr_glm)
   g_learner <- make_learner(Lrnr_mean)
+  B_learner <- make_learner(Lrnr_cv,
+                            make_learner(Lrnr_multivariate,make_learner(Lrnr_mean)),
+                            full_fit=TRUE)
 }
 
-learner_list <- list(Y=Q_learner, A=g_learner)
+learner_list <- list(Y=Q_learner, A=g_learner, B=B_learner)
 
 
 
@@ -162,24 +166,12 @@ if(nrow(data)==0){
 
 
 ## ----stratified_tmle, message=FALSE--------------------------------------
+options(sl3.pcontinuous = 0)
 # CF_Likelihood$undebug("enumerate_cf_tasks")
-# tmle3mopttx:::Optimal_Rule_Q_learning$debug("fit_blip")
-results <- stratified_tmle(data, nodes, learner_list, strata)
-
-debug(tmle3)
-tmle_for_stratum(strata[1,],data,nodes,learner_list)
-glearner <- learner_list$A
-gtask <-tmle_task$get_regression_task("A")
-glearner$train(gtask)
-stack <- Stack$new(glearner$params$learners)
-stack$train(task)
-
-tmle_spec_opttx <- tmle3_mopttx_vim(V = nodes$W,
-                                    type = "blip2",
-                                    blip_library = NULL,
-                                    contrast = "multiplicative",
-                                    maximize = FALSE)
-tmle3(tmle_spec_opttx, data,nodes,learner_list)
+# tmle3mopttx:::Optimal_Rule_Revere$debug("fit_blip")
+# tmle3mopttx:::Optimal_Rule_Revere$debug("rule")
+# tmle_for_stratum(strata[1,],data,nodes,learner_list, tl_params$maximize)
+results <- stratified_tmle(data, nodes, learner_list, strata, tl_params$maximize)
 
 formatted_results <- format_results(results, data, nodes)
 

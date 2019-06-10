@@ -172,13 +172,13 @@ todo: add detail about dropping strata with rare outcomes, handling missingness
 ### Parameter: TSM
 
 
- study_id  mrace   intervention_level   baseline_level      estimate     ci_lower    ci_upper
----------  ------  -------------------  ---------------  -----------  -----------  ----------
-        1  White   optimal              observed           0.8168219    0.4424574   1.1911864
-        2  White   optimal              observed           0.7905754    0.2966646   1.2844862
-        3  White   optimal              observed           0.1471158   -0.1878569   0.4820886
-        4  White   optimal              observed           0.4676811    0.1001383   0.8352239
-        5  White   optimal              observed          -0.1183184   -0.5188671   0.2822304
+ study_id  mrace   intervention_level   baseline_level     estimate     ci_lower    ci_upper
+---------  ------  -------------------  ---------------  ----------  -----------  ----------
+        1  White   optimal              observed          0.8007025    0.4323288   1.1690762
+        2  White   optimal              observed          0.8031783    0.3105190   1.2958376
+        3  White   optimal              observed          0.1418023   -0.2179775   0.5015821
+        4  White   optimal              observed          0.4397978    0.0692302   0.8103654
+        5  White   optimal              observed          0.0456116   -0.3549005   0.4461236
 
 
 ### Parameter: E(Y)
@@ -198,9 +198,9 @@ todo: add detail about dropping strata with rare outcomes, handling missingness
 
  study_id  mrace   intervention_level   baseline_level      estimate     ci_lower     ci_upper
 ---------  ------  -------------------  ---------------  -----------  -----------  -----------
-        1  White   optimal              observed          -0.4827752   -0.8354066   -0.1301439
-        2  White   optimal              observed          -0.6838926   -1.1214278   -0.2463574
-        3  White   optimal              observed           0.0457609   -0.2591713    0.3506930
-        4  White   optimal              observed          -0.3494596   -0.6925045   -0.0064148
-        5  White   optimal              observed           0.1960327   -0.1734800    0.5655455
+        1  White   optimal              observed          -0.4666558   -0.8138426   -0.1194691
+        2  White   optimal              observed          -0.6964955   -1.1330806   -0.2599104
+        3  White   optimal              observed           0.0510744   -0.2739830    0.3761319
+        4  White   optimal              observed          -0.3215763   -0.6672394    0.0240868
+        5  White   optimal              observed           0.0321028   -0.3356734    0.3998791
 

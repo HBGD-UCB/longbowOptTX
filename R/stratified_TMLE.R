@@ -105,10 +105,16 @@ tmle_for_stratum <- function(strata_row, data, nodes, learner_list, maximize){
 stratified_tmle <- function(data, nodes, learner_list, strata, maximize){
 
   strata_row <- strata[1,]
-  results <- strata[,tmle_for_stratum(.SD, data, nodes,
+  results <- try({
+  strata[,tmle_for_stratum(.SD, data, nodes,
                                           learner_list, maximize),
                         by=seq_len(nrow(strata))]
 
-
+  })
+  
+  if(inherits(results,"try-error")){
+    return(NULL)
+  }
+  
   return(results)
 }
