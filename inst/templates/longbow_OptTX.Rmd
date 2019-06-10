@@ -24,7 +24,7 @@ params:
       id: ['subjid']
       W: []
       A: ['parity_cat']
-      Y: ['haz01']
+      Y: ['haz']
   script_params:
     value:
       parallelize:
@@ -35,7 +35,7 @@ params:
         value: TRUE
       count_Y:
         input: checkbox
-        value: TRUE        
+        value: FALSE        
       baseline_level:
         input: 'character'
         value: "[1,2)"

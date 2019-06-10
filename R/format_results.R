@@ -29,6 +29,9 @@ get_intervention_levels <- function(param_names){
   matches <- gsub("A=","",matches)
   matches[matches==""]=NA
   matches <- as.data.table(matches)
+  if(ncol(matches==1)){
+    matches$baseline="observed"
+  }
   setnames(matches, c("intervention", "baseline"))
 
   return(matches)
