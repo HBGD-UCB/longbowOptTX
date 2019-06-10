@@ -66,9 +66,13 @@ tmle_for_stratum <- function(strata_row, data, nodes, learner_list, maximize){
 
 
   
-
-  tmle_fit <- tmle3(tmle_spec_opttx, stratum_data, stratum_nodes_reduced, learner_list)
-
+  tmle_fit <- try({
+  tmle3(tmle_spec_opttx, stratum_data, stratum_nodes_reduced, learner_list)
+  })
+  
+  if(inherits(tmle_fit,"try-error")){
+    return(NULL)
+  }
   results <- tmle_fit$summary
 
   stratum_ids <- stratum_data[1, c(nodes$strata, "strata_label"), with = FALSE]
@@ -105,16 +109,11 @@ tmle_for_stratum <- function(strata_row, data, nodes, learner_list, maximize){
 stratified_tmle <- function(data, nodes, learner_list, strata, maximize){
 
   strata_row <- strata[1,]
-  results <- try({
-  strata[,tmle_for_stratum(.SD, data, nodes,
+  
+  results <- strata[,tmle_for_stratum(.SD, data, nodes,
                                           learner_list, maximize),
                         by=seq_len(nrow(strata))]
 
-  })
-  
-  if(inherits(results,"try-error")){
-    return(NULL)
-  }
-  
+
   return(results)
 }
